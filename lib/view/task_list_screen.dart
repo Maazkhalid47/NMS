@@ -22,7 +22,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
         title: Row(
           children: [
             Icon(Icons.menu_rounded,color: Colors.black,),
-
             Text('WorkSpace',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 25,fontFamily: 'Inter'),)
           ],
         ),
@@ -151,13 +150,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
             Expanded(
               child: ListView(
                 children: [
-                  // Task Card 1 (High Priority)
                   _taskListItem("HIGH", "O.S Infrastructure Audit & Security Scaling", "Oct 24", "3", Colors.red, false),
-                  // Task Card 2 (Medium Priority)
                   _taskListItem("MEDIUM", "Brand Guidelines V2 Distribution", "Oct 24", null, Colors.blue, false),
-                  // Task Card 3 (Checked/Completed)
                   _taskListItem(null, "Review annual performance metrics", "Done", null, Colors.grey, true),
-                  // Task Card 4 (Low Priority)
                   _taskListItem("LOW", "Update team bio for website redesign", "Nov 02", null, Colors.blueGrey, false),
                 ],
               ),
@@ -165,14 +160,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
           ],
         ),
       ),
-      // --- Floating Action Button ---
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         backgroundColor: Colors.black,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: const Icon(Icons.add, color: Colors.white),
       ),
-      // --- Bottom Navigation ---
       bottomNavigationBar: Container(
         height: 70,
         decoration: BoxDecoration(
@@ -191,8 +184,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
       ),
     );
   }
-
-  // Task Item Builder (Direct design implementation)
   Widget _taskListItem(String? priority, String title, String date, String? comments, Color priorityColor, bool isChecked) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
@@ -204,7 +195,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Checkbox
           Container(
             height: 20, width: 20,
             decoration: BoxDecoration(

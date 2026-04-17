@@ -145,8 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: TextButton.icon(
                   onPressed: () {},
                   icon: const Icon(Icons.logout, color: Colors.redAccent, size: 18),
-                  label: const Text("Log Out",
-                      style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 13)),
+                  label: const Text("Log Out", style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 13)),
                 ),
               ),
             ),
@@ -157,7 +156,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
-      // --- Bottom Nav ---
       bottomNavigationBar: Container(
         height: 70,
         decoration: BoxDecoration(
@@ -167,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             BoxShadow(
               color: Colors.black12,
               blurRadius: 6,
-              offset: Offset(0, -2), // shadow upar ki taraf
+              offset: Offset(0, -2),
             ),
           ],
         ),

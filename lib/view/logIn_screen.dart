@@ -22,15 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 100),
-                const Text(
-                  "Login",
-                  style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
+                const Text("Login", style: TextStyle(fontFamily: 'Inter', fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black,)),
                 const SizedBox(height: 4),
                 Container(
                   width: 45,
@@ -41,16 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 60),
-                // --- Email Field ---
-                const Text(
-                  "EMAIL ADDRESS",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                    letterSpacing: 1.2,
-                  ),
-                ),
+                const Text("EMAIL ADDRESS", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey,letterSpacing: 1.2,)),
                 const SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
@@ -74,26 +57,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // --- Password Field ---
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "PASSWORD",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
+                    const Text("PASSWORD", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2,),),
                     TextButton(
                       onPressed: () {},
-                      child: const Text(
-                        "FORGOT?",
-                        style: TextStyle(fontSize: 12, color: Colors.black26, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                      child: const Text("FORGOT?", style: TextStyle(fontSize: 12, color: Colors.black26, fontWeight: FontWeight.bold),),),
                   ],
                 ),
                 Container(
@@ -116,18 +86,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                       suffixIcon: IconButton(
-                        icon: Icon(
-                          _isObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                          color: Colors.grey.shade400,
-                          size: 20,
-                        ),
+                        icon: Icon(_isObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined, color: Colors.grey.shade400, size: 20,),
                         onPressed: () => setState(() => _isObscured = !_isObscured),
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 60),
-                //primary action button
                 Container(
                   width: double.infinity,
                   height: 56,
@@ -167,26 +132,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           const Icon(Icons.login_sharp,size: 18,color: Colors.white,),
                           SizedBox(width: 7,),
-                          const Text(
-                            "Log In",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),),
+                          const Text("Log In", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18,),),
                         ],
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 30),
-                //Divider
                 const Center(
-                  child: Text(
-                    "OR",
-                    style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold),
-                  ),
-                ),
+                  child: Text("OR", style: TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.bold),),),
                 const SizedBox(height: 30),
                 //Biometric button
                 Container(
@@ -200,11 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: TextButton.icon(
                     onPressed: () {},
                     icon: const Icon(Icons.fingerprint, color: Colors.black54),
-                    label: const Text(
-                      "Use Biometric Login",
-                      style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
-                    ),
-                  ),
+                    label: const Text("Use Biometric Login", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),),),
                 ),
                 const SizedBox(height: 60),
                 Center(
@@ -216,10 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen()));
                         },
-                        child: const Text(
-                          "Sign up",
-                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                        ),
+                        child: const Text("Sign up", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
                       ),
                     ],
                   ),

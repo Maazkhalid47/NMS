@@ -19,13 +19,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         leading: const Icon(Icons.menu, color: Colors.black),
         title: const Row(
           children: [
-            Text(
-              "Studio X",
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text("Studio X", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,),),
             Icon(Icons.keyboard_arrow_down, color: Colors.black),
           ],
         ),
@@ -68,10 +62,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Row(
                 children: [
                   const Expanded(
-                    child: Text(
-                      "Add a task...",
-                      style: TextStyle(color: Colors.black26),
-                    ),
+                    child: Text("Add a task...", style: TextStyle(color: Colors.black26),),
                   ),
                   Container(
                     padding: const EdgeInsets.all(8),
@@ -88,29 +79,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Today's Focus",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                Text(
-                  "OCT 24, 2023",
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                ),
+                Text("Today's Focus", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                Text("OCT 24, 2023", style: TextStyle(color: Colors.grey, fontSize: 12),),
               ],
             ),
             const SizedBox(height: 20),
-            _buildTaskItem(
-              "Review brand identity guidelines",
-              "HIGH PRIORITY",
-              Colors.red,
-            ),
+            _buildTaskItem("Review brand identity guidelines", "HIGH PRIORITY", Colors.red,),
             _buildTaskItem("Client presentation prep", "STUDIO X", Colors.blue),
             _buildTaskItem("Invoice reconciliation", "ADMIN", Colors.grey),
-            _buildTaskItem(
-              "Update design system tokens",
-              "SYSTEMS",
-              Colors.blueAccent,
-            ),
+            _buildTaskItem("Update design system tokens", "SYSTEMS", Colors.blueAccent,),
             const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.all(20),
@@ -118,10 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
-                    blurRadius: 10,
-                  ),
+                  BoxShadow(color: Colors.black.withOpacity(0.02),blurRadius: 10,),
                 ],
               ),
               child: Column(
@@ -133,23 +107,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     color: const Color(0xFF007AFF).withOpacity(0.5),
                   ),
                   const SizedBox(height: 15),
-                  const Text(
-                    "WEEKLY GOAL",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),),
+                  const Text("WEEKLY GOAL", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey,),),
                   const SizedBox(height: 5),
-                  const Text(
-                    "You're nearly there.",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
+                  const Text("You're nearly there.", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
                   const SizedBox(height: 5),
-                  const Text(
-                    "75% of your objectives for the 'Precision Atelier' sprint are finished.",
-                    style: TextStyle(color: Colors.grey, fontSize: 13),
-                  ),
+                  const Text("75% of your objectives for the 'Precision Atelier' sprint are finished.", style: TextStyle(color: Colors.grey, fontSize: 13),),
                 ],
               ),
             ),
@@ -179,16 +141,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, color: isActive ? Colors.black : Colors.black26, size: 24),
+        Icon(icon,color: isActive ? Colors.black : Colors.black26, size: 24),
         const SizedBox(height: 4),
         Text(
           label,
-          style: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-            color: isActive ? Colors.black : Colors.black26,
-            letterSpacing: 0.5,
-          ),
+          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isActive ? Colors.black : Colors.black26, letterSpacing: 0.5,),
         ),
         if (isActive)
           Container(
@@ -218,11 +175,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             Text(
               label,
-              style: const TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
+              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey,),
             ),
             const SizedBox(height: 5),
             Text(
@@ -254,18 +207,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14,),
                 ),
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold,),
                 ),
               ],
             ),

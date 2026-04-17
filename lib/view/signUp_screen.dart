@@ -33,23 +33,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                "Create\nAccount",
-                style: TextStyle(
-                  fontSize: 42,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  height: 1.1,
-                  fontFamily: 'Inter',
+              const Text("Create\nAccount", style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold,color: Colors.black, height: 1.1, fontFamily: 'Inter',
                 ),
               ),
               SizedBox(height: 50,),
-              const Text('Build your precious workspace and\nreclaim your focus',style: TextStyle(
-                fontSize: 19,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                height: 1.1,
-                fontFamily: 'Inter',
+              const Text('Build your precious workspace and\nreclaim your focus',style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.black, height: 1.1, fontFamily: 'Inter',
               ),),
               const SizedBox(height: 55),
               const Text("Username", style: _labelStyle),
@@ -74,11 +62,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: TextFormField(
                   decoration: const InputDecoration(
                     hintText: "Email address",
-                    prefixIcon: Icon(
-                      Icons.email_outlined,
-                      size: 20,
-                      color: Colors.black45,
-                    ),
+                    prefixIcon: Icon(Icons.email_outlined, size: 20, color: Colors.black45,),
                     border: InputBorder.none,
                   ),
                 ),
@@ -91,16 +75,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   obscureText: _isObscured,
                   decoration: InputDecoration(
                     hintText: "••••••••",
-                    prefixIcon: const Icon(
-                      Icons.lock_outline,
-                      size: 20,
-                      color: Colors.black45,
-                    ),
+                    prefixIcon: const Icon(Icons.lock_outline, size: 20, color: Colors.black45,),
                     suffixIcon: IconButton(
-                      icon: Icon(
-                        _isObscured ? Icons.visibility_off : Icons.visibility,
-                        size: 18,
-                      ),
+                      icon: Icon(_isObscured ? Icons.visibility_off : Icons.visibility, size: 18,),
                       onPressed: () => setState(() => _isObscured = !_isObscured),
                     ),
                     border: InputBorder.none,
@@ -115,20 +92,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   obscureText: _isConfirmObscured,
                   decoration: InputDecoration(
                     hintText: "••••••••",
-                    prefixIcon: const Icon(
-                      Icons.lock_reset_outlined,
-                      size: 20,
-                      color: Colors.black45,
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isConfirmObscured
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                        size: 18,
-                      ),
-                      onPressed: () => setState(() => _isConfirmObscured = !_isConfirmObscured,
-                      ),
+                    prefixIcon: const Icon(Icons.lock_reset_outlined, size: 20, color: Colors.black45,),
+                    suffixIcon: IconButton(icon: Icon(_isConfirmObscured ? Icons.visibility_off : Icons.visibility, size: 18,),
+                      onPressed: () => setState(() => _isConfirmObscured = !_isConfirmObscured,),
                     ),
                     border: InputBorder.none,
                   ),
@@ -157,35 +123,19 @@ class _SignupScreenState extends State<SignupScreen> {
                   onPressed: () {
                     // Sign up logic yahan aayegi
                   },
-                  child: const Text(
-                    "SIGN UP",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: const Text("SIGN UP", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,),),
                 ),
               ),
               const SizedBox(height: 25),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Already a member? ",
-                    style: TextStyle(color: Colors.grey, fontSize: 13),
-                  ),
+                  const Text("Already a member? ",style: TextStyle(color: Colors.grey, fontSize: 13),),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                     },
-                    child: const Text(
-                      "Back to Login",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
-                    ),
+                    child: const Text("Back to Login", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13,),),
                   ),
                 ],
               ),
