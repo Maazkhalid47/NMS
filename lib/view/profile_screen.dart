@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:software_management/view/logIn_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -9,15 +11,44 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  String userName = "Loading...";
+  String userEmail = "Loading...";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getUserProfile();
+  }
+
+  Future<void> _getUserProfile() async{
+    try{
+      final user = Supabase.instance.client.auth.currentUser;
+
+      if(user != null){
+        final userData = await Supabase.instance.client.from('users').select('name').eq('id', user.id).single();
+        setState(() {
+          userName = userData['name'];
+          userEmail = userData['email'] ?? user.email;
+        });
+      }
+    }catch (e){
+      print("Error fetching profile: $e");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.grey.shade50,
         elevation: 0,
-        leading: const Icon(Icons.reorder, color: Colors.black),
-        title: const Text("Workspace",style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18)),
+        leading: const Icon(Icons.reorder, color: Colors.black,size: 25,),
+        title: const Text("Workspace",style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 22)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 15),
@@ -41,32 +72,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 100,
-              width: 100,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Stack(
-                children: [
-                  const Center(child: Icon(Icons.person, size: 60, color: Colors.black54)),
-                  Positioned(
-                    bottom: 5,
-                    right: 5,
-                    child: CircleAvatar(
-                      radius: 12,
-                      backgroundColor: Colors.black,
-                      child: const Icon(Icons.edit, size: 12, color: Colors.white),
+            Center(
+              child: Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Stack(
+                  children: [
+                    const Center(child: Icon(Icons.person, size: 60, color: Colors.black54)),
+                    Positioned(
+                      bottom: 5,
+                      right: 5,
+                      child: CircleAvatar(
+                        radius: 12,
+                        backgroundColor: Colors.black,
+                        child: const Icon(Icons.edit, size: 12, color: Colors.white),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 25),
-            const Text("PERSONAL PROFILE", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1)),
-            const SizedBox(height: 5),
-            const Text("Julian\nVance", style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold, height: 1.1)),
+            const SizedBox(height: 20),
+            Center(child: const Text("PERSONAL PROFILE", style: TextStyle(fontSize: 10.5, fontWeight: FontWeight.bold, color: Colors.black45, letterSpacing: 1))),
+            const SizedBox(height: 10),
+            Center(child: Text(userName,textAlign: TextAlign.center,maxLines: 1,overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, height: 0.5))),
             const SizedBox(height: 40),
             const Text("Identity", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 25),
@@ -75,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Text("FULL NAME",style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey.shade600)),
                 const SizedBox(height: 3.5,),
-                Text("Julian Vance",style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                Text(userName,style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
               ],
             ),
             const SizedBox(height: 10,),
@@ -86,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Text("EMAIL ADDRESS",style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey.shade600)),
                 const SizedBox(height: 3.5,),
-                Text("julian.v@atelier.designgmail.com",style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                Text(userEmail,style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
               ],
             ),
             const SizedBox(height: 40),
@@ -139,11 +172,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 width: 200,
                 height: 45,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.withOpacity(0.2)), // Light Red Border
-                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                  borderRadius: BorderRadius.circular(7),
                 ),
                 child: TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await Supabase.instance.client.auth.signOut();
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()),result: (route) => false);
+                  },
                   icon: const Icon(Icons.logout, color: Colors.redAccent, size: 18),
                   label: const Text("Log Out", style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 13)),
                 ),
