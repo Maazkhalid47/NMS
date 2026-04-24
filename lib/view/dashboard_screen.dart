@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:software_management/view_model/dashboard_view_model.dart';
 
@@ -12,58 +14,132 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final TextEditingController _taskController = TextEditingController();
 
-  void _showAddWorkspaceDialog() {
-    final controller = TextEditingController();
+  void _showAddTaskDialog() {
+    final titleController = TextEditingController();
+    final descController = TextEditingController();
+    DateTime? selectedDate;
+    String selectedPriority = 'medium';
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('New Workspace'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(hintText: 'Enter Name'),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Text("Add New Task"),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(hintText: "Task Title",hintStyle: TextStyle(color: Colors.black87)),
+                ),
+                TextField(
+                  controller: descController,
+                  decoration: const InputDecoration(hintText: "Description",hintStyle: TextStyle(color: Colors.black87)),
+                ),
+                const SizedBox(height: 10),
+                ListTile(
+                  title: Text(
+                    selectedDate == null
+                        ? "Select Due Date"
+                        : "Date: ${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
+                  ),
+                  trailing: const Icon(Icons.calendar_month_outlined),
+                  onTap: () async {
+                    DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
+                    );
+                    if (picked != null) {
+                      setDialogState(() => selectedDate = picked);
+                    }
+                  },
+                ),
+                DropdownButton<String>(
+                  isExpanded: true,
+                  dropdownColor: const  Color(0xffF5F5F5),
+                  value: selectedPriority,
+                  items: ['low', 'medium', 'high']
+                      .map((p) => DropdownMenuItem(value: p, child: Text(p)))
+                      .toList(),
+                  onChanged: (val) =>
+                      setDialogState(() => selectedPriority = val!),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel",style: TextStyle(color: Colors.black),),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadiusGeometry.circular(18),
+                ),
+                elevation: 0
+              ),
+              onPressed: () async {
+                if (titleController.text.isNotEmpty && selectedDate != null) {
+                  final vm = context.read<DashboardViewModel>();
+                  final now = DateTime.now();
+                  final finalDateTime = DateTime(
+                    selectedDate!.year,
+                    selectedDate!.month,
+                    selectedDate!.day,
+                    now.hour,
+                    now.minute,
+                    now.second,
+                  );
+                  await vm.createNewTask(
+                    title: titleController.text,
+                    workspaceId: vm.selectedWorkspaceId!,
+                    description: descController.text,
+                    priority: selectedPriority,
+                    dueDate: finalDateTime.toIso8601String(),
+                  );
+                  Navigator.pop(context);
+                } else if (selectedDate == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Please select a Date")),
+                  );
+                }
+              },
+              child: const Text("Add Task"),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (controller.text.isNotEmpty) {
-                context.read<DashboardViewModel>().createNewWorkspace(
-                  controller.text,
-                );
-                Navigator.pop(context);
-              }
-            },
-            child: const Text("Create"),
-          ),
-        ],
       ),
     );
   }
+
   @override
   void initState() {
     super.initState();
     Future.microtask(() => context.read<DashboardViewModel>().getWorkspaces());
   }
+
   @override
   void dispose() {
     _taskController.dispose();
     super.dispose();
   }
 
-  Color getPriorityColor(String priority) {
-    switch (priority.toLowerCase()) {
-      case 'high':
-        return Colors.red;
-      case 'medium':
-        return Colors.orange;
-      case 'low':
-        return Colors.green;
-      default:
-        return Colors.blue;
-    }
+  Color getPriorityColor(String? priority) {
+    final p = priority?.trim().toLowerCase() ?? "";
+
+    if (p == 'high') return Colors.red;
+    if (p == 'medium') return Colors.orange;
+    if (p == 'low') return Colors.green;
+
+    return Colors.blue;
   }
 
   @override
@@ -73,8 +149,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FD),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xffF5F5F5),
         elevation: 0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(25)),
+        ),
         leading: const Icon(Icons.menu, color: Colors.black),
         title: PopupMenuButton<String>(
           onSelected: (String id) => viewModel.selectWorkspaces(id),
@@ -91,18 +170,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  letterSpacing: 0.1,
                 ),
               ),
-              const Icon(Icons.keyboard_arrow_down, color: Colors.black),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(
-                  Icons.add_circle_outline_outlined,
-                  color: Color(0xFF007AFF),
-                ),
-                onPressed: () =>
-                    _showAddWorkspaceDialog(),
+              SizedBox(width: 5),
+              const Icon(
+                Icons.keyboard_arrow_down,
+                color: Colors.black,
+                size: 22,
               ),
+              Spacer(),
               Container(
                 height: 30,
                 width: 30,
@@ -114,15 +192,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ],
           ),
         ),
-        actions: [const SizedBox(width: 1),],
+        actions: [const SizedBox(width: 1)],
       ),
       body: viewModel.isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       _buildStatCard(
@@ -140,77 +219,85 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30),
-                  _buildAddTaskInput(viewModel),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   const Text(
                     "Today's Focus",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 20),
-
-                  viewModel.tasks.isEmpty
-                      ? const Center(child: Text("No Tasks found"))
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: viewModel.tasks.length,
-                          itemBuilder: (context, index) {
-                            final task = viewModel.tasks[index];
-                            return _buildTaskItem(
-                              task.title,
-                              viewModel.selectedWorkspaceName,
-                              getPriorityColor(task.priority),
-                            );
-                          },
-                        ),
-                  const SizedBox(height: 20),
-                  _buildWeeklyGoalCard(),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: viewModel.tasks.isEmpty
+                        ? const Center(
+                            child: Text("No tasks found. Click + to add"),
+                          )
+                        : ListView.builder(
+                            itemCount: viewModel.tasks.length,
+                            itemBuilder: (context, index) {
+                              final task = viewModel.tasks[index];
+                              return Dismissible(key: Key(task.id),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Icon(Icons.delete_forever_outlined,color: Colors.white,),
+                                  ),
+                                  onDismissed: (direction){
+                                    viewModel.deleteTask(task.id);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text("${task.title} deleted")),
+                                    );
+                                  },
+                                child: Card(
+                                  color: const Color(0xffF9F9FB),
+                                  shadowColor: Colors.grey,
+                                  elevation: 0.5,
+                                  margin: const EdgeInsets.symmetric(vertical: 6),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.circle,
+                                      color: getPriorityColor(task.priority),
+                                      size: 14,
+                                    ),
+                                    title: Text(
+                                      task.title,
+                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Text(task.description ?? "No description"),
+                                    trailing: Text(
+                                      formatDate(task.dueDate),
+                                      style: const TextStyle(fontSize: 10, color: Colors.black87),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                    ),
+                  ),
                 ],
               ),
             ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
+        child: const Icon(Icons.add, color: Colors.white),
+        onPressed: () {
+          if (viewModel.selectedWorkspaceId != null) {
+            _showAddTaskDialog();
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Please select a workspace first!")),
+            );
+          }
+        },
+      ),
       bottomNavigationBar: _buildBottomNav(),
-    );
-  }
-  Widget _buildAddTaskInput(DashboardViewModel vm) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.black12)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _taskController,
-              decoration: const InputDecoration(
-                hintText: "Add a task...",
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.add_box, color: Color(0xFF005AFF), size: 30),
-            onPressed: () {
-              final String title = _taskController.text.trim();
-              final String? wsId = vm.selectedWorkspaceId;
-
-              if (title.isNotEmpty && wsId != null) {
-                vm.createNewTask(title: title, workspaceId: wsId, description: "", priority: "medium",dueDate: DateTime.now().toIso8601String(),  );
-                _taskController.clear();
-                FocusScope.of(context).unfocus();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Please select a workspace first!"),
-                  ),
-                );
-              }
-            },
-          ),
-        ],
-      ),
     );
   }
 
@@ -354,5 +441,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ],
     );
+  }
+}
+Color getPriorityColor(String? priority) {
+  if (priority == null) return Colors.blue;
+  switch (priority.trim().toLowerCase()) {
+    case 'high':
+      return Colors.red;
+    case 'medium':
+      return Colors.orange;
+    case 'low':
+      return Colors.green;
+    default:
+      return Colors.blue;
+  }
+}
+String formatDate(String dateString){
+  try{
+    DateTime dateTime = DateTime.parse(dateString);
+
+    return DateFormat('yMMMd').add_jm().format(dateTime);
+  }catch(e){
+    return dateString;
   }
 }
