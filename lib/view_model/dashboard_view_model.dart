@@ -3,7 +3,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../model/task_model.dart';
 import '../model/workspace_model.dart';
 import '../respository/task_repository.dart';
-import '../respository/task_repository.dart' as _taskRepo;
 import '../respository/workspace_repository.dart';
 
 class DashboardViewModel extends ChangeNotifier {
@@ -81,8 +80,6 @@ class DashboardViewModel extends ChangeNotifier {
         description: description,
         dueDate: dueDate,
       );
-      print("TASK ADDED SUCCESSFULLY!");
-
       await Future.delayed(const Duration(milliseconds: 500));
       await fetchTasksForWorkspace(workspaceId);
     } catch (e) {
@@ -113,6 +110,11 @@ class DashboardViewModel extends ChangeNotifier {
     } catch (e) {
       print("Delete Error: $e");
     }
+  }
+  int? get currentWorkspaceCollaborator{
+    if(_selectedWorkspaceId == null || workspaces.isEmpty) return 0;
+
+    return workspaces.firstWhere((ws) => ws.id == _selectedWorkspaceId).collaborator;
   }
 }
 // final userId = supabase.auth.currentUser?.id;

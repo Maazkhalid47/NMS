@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:software_management/view/side_drawer.dart';
 import 'package:software_management/view_model/dashboard_view_model.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -40,11 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 const SizedBox(height: 10),
                 ListTile(
-                  title: Text(
-                    selectedDate == null
-                        ? "Select Due Date"
-                        : "Date: ${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",
-                  ),
+                  title: Text(selectedDate == null ? "Select Due Date" : "Date: ${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",),
                   trailing: const Icon(Icons.calendar_month_outlined),
                   onTap: () async {
                     DateTime? picked = await showDatePicker(
@@ -119,19 +116,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-
   @override
   void initState() {
     super.initState();
     Future.microtask(() => context.read<DashboardViewModel>().getWorkspaces());
   }
-
   @override
   void dispose() {
     _taskController.dispose();
     super.dispose();
   }
-
   Color getPriorityColor(String? priority) {
     final p = priority?.trim().toLowerCase() ?? "";
 
@@ -141,7 +135,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Colors.blue;
   }
-
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<DashboardViewModel>();
@@ -154,7 +147,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(25)),
         ),
-        leading: const Icon(Icons.menu, color: Colors.black),
+        leading: Builder(builder: (context) => IconButton(
+          icon: Icon(Icons.menu, color: Colors.black),
+          onPressed: Scaffold.of(context).openDrawer,)),
         title: PopupMenuButton<String>(
           onSelected: (String id) => viewModel.selectWorkspaces(id),
           itemBuilder: (context) => viewModel.workspaces.map((ws) {
@@ -167,19 +162,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 viewModel.isLoading
                     ? "Loading..."
                     : viewModel.selectedWorkspaceName,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                  letterSpacing: 0.1,
-                ),
+                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24, letterSpacing: 0.1,),
               ),
               SizedBox(width: 5),
-              const Icon(
-                Icons.keyboard_arrow_down,
-                color: Colors.black,
-                size: 22,
-              ),
+              const Icon(Icons.keyboard_arrow_down, color: Colors.black, size: 22,),
               Spacer(),
               Container(
                 height: 30,
@@ -204,27 +190,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      _buildStatCard(
-                        "PENDING",
-                        viewModel.pendingCount.toString(),
-                        const Color(0xFF007AFF),
-                        true,
-                      ),
+                      _buildStatCard("PENDING", viewModel.pendingCount.toString(), const Color(0xFF007AFF), true,),
                       const SizedBox(width: 15),
-                      _buildStatCard(
-                        "COMPLETED",
-                        viewModel.completedCount.toString(),
-                        Colors.grey,
-                        false,
-                      ),
+                      _buildStatCard("COMPLETED", viewModel.completedCount.toString(), Colors.grey, false,),
                     ],
                   ),
                   const SizedBox(height: 20),
                   const SizedBox(height: 20),
-                  const Text(
-                    "Today's Focus",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  const Text("Today's Focus", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                   const SizedBox(height: 10),
                   Expanded(
                     child: viewModel.tasks.isEmpty
@@ -244,7 +217,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       color: Colors.red,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    child: const Icon(Icons.delete_forever_outlined,color: Colors.white,),
+                                    child: const Icon(Icons.delete_sweep,color: Colors.white,),
                                   ),
                                   onDismissed: (direction){
                                     viewModel.deleteTask(task.id);
@@ -261,20 +234,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: ListTile(
-                                    leading: Icon(
-                                      Icons.circle,
-                                      color: getPriorityColor(task.priority),
-                                      size: 14,
-                                    ),
-                                    title: Text(
-                                      task.title,
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
-                                    ),
+                                    leading: Icon(Icons.circle, color: getPriorityColor(task.priority), size: 14,),
+                                    title: Text(task.title, style: const TextStyle(fontWeight: FontWeight.bold),),
                                     subtitle: Text(task.description ?? "No description"),
-                                    trailing: Text(
-                                      formatDate(task.dueDate),
-                                      style: const TextStyle(fontSize: 10, color: Colors.black87),
-                                    ),
+                                    trailing: Text(formatDate(task.dueDate), style: const TextStyle(fontSize: 10, color: Colors.black87),),
                                   ),
                                 ),
                               );
@@ -284,6 +247,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ],
               ),
             ),
+      drawer: const SideDrawer(),
+
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.black,
         child: const Icon(Icons.add, color: Colors.white),
@@ -297,16 +262,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           }
         },
       ),
-      bottomNavigationBar: _buildBottomNav(),
     );
   }
-
   Widget _buildStatCard(
     String label,
     String count,
     Color color,
     bool isActive,
-  ) {
+  ){
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(20),
@@ -317,19 +280,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
-            ),
+           Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey,),),
             const SizedBox(height: 5),
-            Text(
-              count,
-              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-            ),
+            Text(count, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),),
             const SizedBox(height: 10),
             Container(width: 60, height: 3, color: color),
           ],
@@ -337,7 +290,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-
   Widget _buildTaskItem(String title, String subtitle, Color tagColor) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -377,7 +329,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-
   Widget _buildWeeklyGoalCard() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -410,38 +361,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-
-  Widget _buildBottomNav() {
-    return Container(
-      height: 80,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Colors.black12)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavItem(Icons.grid_view_rounded, "HOME", true),
-          _buildNavItem(Icons.list_alt_rounded, "LIST", false),
-          _buildNavItem(Icons.folder_open_rounded, "FILES", false),
-          _buildNavItem(Icons.person_outline_rounded, "PROFILE", false),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNavItem(IconData icon, String label, bool isActive) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: isActive ? Colors.black : Colors.black26),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-        ),
-      ],
-    );
-  }
 }
 Color getPriorityColor(String? priority) {
   if (priority == null) return Colors.blue;
@@ -459,7 +378,6 @@ Color getPriorityColor(String? priority) {
 String formatDate(String dateString){
   try{
     DateTime dateTime = DateTime.parse(dateString);
-
     return DateFormat('yMMMd').add_jm().format(dateTime);
   }catch(e){
     return dateString;

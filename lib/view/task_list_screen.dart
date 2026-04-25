@@ -167,22 +167,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: const Icon(Icons.add, color: Colors.white),
       ),
-      bottomNavigationBar: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Colors.black.withOpacity(0.05))),
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Icon(Icons.grid_view_rounded, color: Colors.black12),
-            Icon(Icons.list_alt_rounded, color: Colors.black12),
-            Icon(Icons.folder_open_rounded, color: Colors.black), // Active
-            Icon(Icons.person_outline, color: Colors.black12),
-          ],
-        ),
-      ),
     );
   }
   Widget _taskListItem(String? priority, String title, String date, String? comments, Color priorityColor, bool isChecked) {

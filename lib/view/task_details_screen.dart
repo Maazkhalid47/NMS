@@ -118,29 +118,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Colors.black12, width: 0.5)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 6,
-              offset: Offset(0, -2),
-            ),
-          ],
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Icon(Icons.grid_view_rounded, color: Colors.black38),
-            Icon(Icons.list_alt_rounded, color: Colors.black38),
-            Icon(Icons.folder_open_rounded, color: Colors.black38),
-            Icon(Icons.person, color: Colors.black),
-          ],
-        ),
-      ),
     );
   }
 }

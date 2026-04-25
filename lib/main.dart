@@ -3,12 +3,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:software_management/view/dashboard_screen.dart';
 import 'package:software_management/view/logIn_screen.dart';
+import 'package:software_management/view/bottom_nav_bar.dart';
 import 'package:software_management/view/profile_screen.dart';
 import 'package:software_management/view/signUp_screen.dart';
 import 'package:software_management/view/splash_screen.dart';
 import 'package:software_management/view/task_details_screen.dart';
 import 'package:software_management/view/task_list_screen.dart';
 import 'package:software_management/view_model/dashboard_view_model.dart';
+import 'package:software_management/view_model/navigation_view_model.dart';
+import 'package:software_management/view_model/profile_view_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -31,7 +34,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => DashboardViewModel())
+        ChangeNotifierProvider(create: (_) => DashboardViewModel()),
+        ChangeNotifierProvider(create: (_) => NavigationViewModel()),
+        ChangeNotifierProvider(create: (_) => ProfileViewModel()),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -40,9 +45,8 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Inter',
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           ),
-          home: const DashboardScreen()
+          home: const SplashScreen(),
       ),
     );
   }
 }
-
