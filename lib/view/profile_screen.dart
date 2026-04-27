@@ -6,6 +6,8 @@ class ProfileScreen extends StatefulWidget {
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
+
+  static const String routeName = "/profile";
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {

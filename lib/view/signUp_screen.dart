@@ -7,6 +7,9 @@ class SignupScreen extends StatefulWidget {
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
+
+
+  static const String routeName = "/signup";
 }
 
 class _SignupScreenState extends State<SignupScreen> {
@@ -133,7 +136,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   const Text("Already a member? ",style: TextStyle(color: Colors.grey, fontSize: 13),),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                      context.go(LoginScreen.routeName);
                     },
                     child: const Text("Back to Login", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13,),),
                   ),

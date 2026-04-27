@@ -7,6 +7,9 @@ class LoginScreen extends StatefulWidget {
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
+
+
+  static const String routeName = "/login";
 }
 class _LoginScreenState extends State<LoginScreen> {
   bool _isObscured = true;
@@ -164,7 +167,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Text("Don't have an account? ", style: TextStyle(color: Colors.grey)),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen()));
+                          // Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen()));
+                        context.go(SignupScreen.routeName);
+                        
                         },
                         child: const Text("Sign up", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
                       ),
