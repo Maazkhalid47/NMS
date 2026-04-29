@@ -365,7 +365,7 @@ import 'components/custom_appbar.dart';
             onPressed: () => _showCreateWorkspaceSheet(context),
           ),
           title: PopupMenuButton<String>(
-            offset: const Offset(0, 45), // Title ke niche khulne ke liye
+            offset: const Offset(0, 35),
             onSelected: (String id) => viewModel.selectWorkspaces(id),
             itemBuilder: (context) => viewModel.workspaces.map(
                   (ws) => PopupMenuItem<String>(value: ws.id, child: Text(ws.name)),
