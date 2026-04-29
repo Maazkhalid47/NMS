@@ -7,8 +7,7 @@ class TaskRepository {
   Future<List<TaskModel>> fetchTasks(String workspaceId) async {
     final response = await _supabase
         .from('tasks')
-        .select()
-        .eq('workspace_id', workspaceId).order('created_at', ascending: false);
+        .select().eq('workspace_id', workspaceId).eq('created_by', _supabase.auth.currentUser!.id);
 
     return (response as List).map((task) => TaskModel.fromMap(task)).toList();
   }
@@ -35,10 +34,23 @@ class TaskRepository {
       'status': 'pending',
     });
   }
+
   Future<void> deleteTask(String taskId) async {
     await _supabase
         .from('tasks')
         .delete()
         .eq('id', taskId);
+  }
+  Future<void> updateTaskTitle(String taskId, String newTitle) async {
+    await _supabase.from('tasks').update({'title': newTitle}).eq('id', taskId);
+  }
+  Future<void> updateTaskPriority(String taskId,String priority) async{
+    await _supabase.from('tasks').update({'priority': priority}).eq('id', taskId);
+  }
+  Future<void> updateTaskStatus(String id,String status) async{
+    await _supabase.from('tasks').update({'status': status}).eq('id', id);
+  }
+  Future<void> updateTaskDescription(String taskId,String description) async{
+    await _supabase.from('tasks').update({'description': description}).eq('id', taskId);
   }
 }

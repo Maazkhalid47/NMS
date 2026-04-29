@@ -2,7 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'dashboard_view_model.dart';
 
 class ProfileViewModel extends ChangeNotifier{
 
@@ -37,8 +40,18 @@ class ProfileViewModel extends ChangeNotifier{
       notifyListeners();
     }
   }
-  Future<void> logout() async {
-    await _supabase.auth.signOut();
+  Future<void> logout(BuildContext context) async {
+    try {
+      await _supabase.auth.signOut(); // Supabase se logout
+
+      if (context.mounted) {
+        // Dashboard ka purana data clear karein taake next login par purana kuch na dikhe
+        Provider.of<DashboardViewModel>(context, listen: false).clearData();
+      }
+      // Yahan se Navigator wali line hata dein (kyunki hum screen par handle kar rahe hain)
+    } catch (e) {
+      debugPrint("Logout Error: $e");
+    }
   }
   final ImagePicker _picker = ImagePicker();
 
@@ -59,7 +72,7 @@ class ProfileViewModel extends ChangeNotifier{
 
       await _supabase.storage.from('avatars').upload(path, file,fileOptions: const FileOptions(upsert: true));
 
-      final String imageUrl = _supabase.storage.from('avatar').getPublicUrl(path);
+      final imageUrl = _supabase.storage.from('avatar').getPublicUrl(path);
       await _supabase.from('users').update({'avatar_url': imageUrl}).eq('id', user.id);
 
       await getUserProfile();

@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:software_management/view/logIn_screen.dart';
+import 'package:software_management/view/side_drawer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../view_model/dashboard_view_model.dart';
 import '../view_model/profile_view_model.dart';
+import 'components/custom_appbar.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -17,7 +19,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(() => context.read<ProfileViewModel>().getUserProfile());
   }
@@ -28,34 +29,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final dashVm = context.watch<DashboardViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.grey.shade50,
-        elevation: 0,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(Icons.menu, color: Colors.black),
-            onPressed: Scaffold.of(context).openDrawer,
-          ),
-        ),
-        title: const Text("Profile", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 22,),),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: Container(
-              width: 35,
-              height: 35,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade900,
-                borderRadius: BorderRadius.circular(9),
-                image: DecorationImage(
-                  image: AssetImage(""),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-        ],
+      backgroundColor: const Color(0xFFF8F9FD),
+      appBar: CustomAppbar(title: Text("My Profile",style: TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+      ),)
       ),
       body: profileVm.isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -124,15 +103,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Center(
                     child: OutlinedButton.icon(
                       onPressed: () async {
-                        await profileVm.logout();
+                        await profileVm.logout(context);
                         if (context.mounted) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                            (route) => false,
-                          );
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (route) => false);
                         }
                       },
                       style: OutlinedButton.styleFrom(
@@ -216,3 +189,27 @@ Widget _buildActiveWorkspace(BuildContext context) {
     ),
   );
 }
+// AppBar(
+// backgroundColor: Colors.grey.shade50,
+// elevation: 0,
+// leading: Builder(
+//   builder: (context) => IconButton(
+//     icon: Icon(Icons.menu, color: Colors.black),
+//     onPressed: Scaffold.of(context).openDrawer,
+//   ),
+// ),
+// title: const Text("Profile", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800, fontSize: 22,),),
+// actions: [const SizedBox(width: 10),
+// Padding(
+// padding: const EdgeInsets.only(right: 20),
+// child: Container(
+// height: 30,
+// width: 30,
+// decoration: BoxDecoration(
+// color: Colors.black,
+// borderRadius: BorderRadius.circular(10),
+// ),
+// child: const Icon(Icons.person, color: Colors.white, size: 20),
+// ),
+// ),],
+// ),
