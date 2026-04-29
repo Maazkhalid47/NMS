@@ -38,14 +38,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NavigationViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
       ],
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            fontFamily: 'Inter',
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          ),
-          home: const SplashScreen(),
+      child: MaterialApp.router( 
+      routerConfig: router,
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        fontFamily: 'Inter',
+        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
     );
   }

@@ -10,131 +10,16 @@ class DashboardScreen extends StatefulWidget {
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
+
+
+  static const String routeName = "/dashboard";
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final TextEditingController _taskController = TextEditingController();
 
-  void _showAddTaskDialog() {
-    final titleController = TextEditingController();
-    final descController = TextEditingController();
-    DateTime? selectedDate;
-    String selectedPriority = 'medium';
 
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          backgroundColor: Colors.white,
-          title: const Text("Add New Task"),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: titleController,
-                  decoration: const InputDecoration(hintText: "Task Title",hintStyle: TextStyle(color: Colors.black87)),
-                ),
-                TextField(
-                  controller: descController,
-                  decoration: const InputDecoration(hintText: "Description",hintStyle: TextStyle(color: Colors.black87)),
-                ),
-                const SizedBox(height: 10),
-                ListTile(
-                  title: Text(selectedDate == null ? "Select Due Date" : "Date: ${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}",),
-                  trailing: const Icon(Icons.calendar_month_outlined),
-                  onTap: () async {
-                    DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2100),
-                    );
-                    if (picked != null) {
-                      setDialogState(() => selectedDate = picked);
-                    }
-                  },
-                ),
-                DropdownButton<String>(
-                  isExpanded: true,
-                  dropdownColor: const  Color(0xffF5F5F5),
-                  value: selectedPriority,
-                  items: ['low', 'medium', 'high']
-                      .map((p) => DropdownMenuItem(value: p, child: Text(p)))
-                      .toList(),
-                  onChanged: (val) =>
-                      setDialogState(() => selectedPriority = val!),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel",style: TextStyle(color: Colors.black),),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadiusGeometry.circular(18),
-                ),
-                elevation: 0
-              ),
-              onPressed: () async {
-                if (titleController.text.isNotEmpty && selectedDate != null) {
-                  final vm = context.read<DashboardViewModel>();
-                  final now = DateTime.now();
-                  final finalDateTime = DateTime(
-                    selectedDate!.year,
-                    selectedDate!.month,
-                    selectedDate!.day,
-                    now.hour,
-                    now.minute,
-                    now.second,
-                  );
-                  await vm.createNewTask(
-                    title: titleController.text,
-                    workspaceId: vm.selectedWorkspaceId!,
-                    description: descController.text,
-                    priority: selectedPriority,
-                    dueDate: finalDateTime.toIso8601String(),
-                  );
-                  Navigator.pop(context);
-                } else if (selectedDate == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Please select a Date")),
-                  );
-                }
-              },
-              child: const Text("Add Task"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() => context.read<DashboardViewModel>().getWorkspaces());
-  }
-  @override
-  void dispose() {
-    _taskController.dispose();
-    super.dispose();
-  }
-  Color getPriorityColor(String? priority) {
-    final p = priority?.trim().toLowerCase() ?? "";
 
-    if (p == 'high') return Colors.red;
-    if (p == 'medium') return Colors.orange;
-    if (p == 'low') return Colors.green;
 
-    return Colors.blue;
-  }
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<DashboardViewModel>();
