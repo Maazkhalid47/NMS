@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../model/task_model.dart';
+import '../model/tasks_model.dart';
 import '../model/workspace_model.dart';
 import '../respository/task_repository.dart';
 import '../respository/workspace_repository.dart';

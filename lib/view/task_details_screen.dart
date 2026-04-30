@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as centext;
-import 'package:software_management/model/task_model.dart';
+import 'package:software_management/model/tasks_model.dart';
 import 'package:software_management/view/components/custom_appbar.dart';
 import 'package:software_management/view/side_drawer.dart';
 import 'package:software_management/view_model/dashboard_view_model.dart';

@@ -5,7 +5,7 @@ import 'package:software_management/view/side_drawer.dart';
 import 'package:software_management/view_model/dashboard_view_model.dart';
 import 'package:software_management/view_model/navigation_view_model.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import '../model/task_model.dart';
+import '../model/tasks_model.dart';
 import 'dashboard_screen.dart';
 
 class TaskListScreen extends StatefulWidget {

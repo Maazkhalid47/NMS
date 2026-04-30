@@ -1,5 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../model/task_model.dart';
+import '../model/tasks_model.dart';
 
 class TaskRepository {
   final _supabase = Supabase.instance.client;
