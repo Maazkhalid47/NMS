@@ -16,7 +16,6 @@ class BottomNavBar extends StatelessWidget {
     final List<Widget> _screens = [
       const DashboardScreen(),
       const TaskListScreen(),
-      const Center(child: Text('Files')),
       const ProfileScreen(),
     ];
     final navVM = context.watch<NavigationViewModel>();
@@ -36,7 +35,6 @@ class BottomNavBar extends StatelessWidget {
           items: const[
             BottomNavigationBarItem(icon: Icon(Icons.home_outlined),label: 'HOME'),
             BottomNavigationBarItem(icon: Icon(Icons.list_alt),label: 'LIST'),
-            BottomNavigationBarItem(icon: Icon(Icons.folder_open_outlined),label: 'FOLDER'),
             BottomNavigationBarItem(icon: Icon(Icons.person_outline),label: 'PROFILE')
           ]),
     );

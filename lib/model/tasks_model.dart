@@ -6,6 +6,7 @@ class TaskModel {
   final String priority;
   final String? description;
   final String dueDate;
+  final DateTime created_at;
 
   TaskModel({
     required this.id,
@@ -14,7 +15,8 @@ class TaskModel {
     required this.title,
     required this.status,
     required this.workspaceId,
-    required this.priority});
+    required this.created_at,
+    required this.priority,});
 
   factory TaskModel.fromMap(Map<String, dynamic> map) {
     return TaskModel(
@@ -25,6 +27,19 @@ class TaskModel {
       dueDate: map['due_date'] ?? '',
       status: map['status'] ?? 'pending',
       workspaceId: map['workspace_id'] ?? '',
+      created_at: DateTime.parse(map['created_at'] ?? DateTime.now().toString())
+    );
+  }
+  TaskModel copyWith({String? status, String? title, String? priority,String? description}){
+    return TaskModel(
+        id: this.id,
+        dueDate: this.dueDate,
+        title: title ?? this.title,
+        status: status ?? this.status,
+        workspaceId: this.workspaceId,
+        created_at: this.created_at,
+        priority: priority ?? this.priority,
+      description: description ?? this.description,
     );
   }
 }
