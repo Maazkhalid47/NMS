@@ -20,11 +20,22 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: const Icon(Icons.arrow_back, color: Colors.black),
-        title: const Text("Workspace", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        actions: const [
+        title: const Text('WorkSpace',style: TextStyle(color: Colors.black,fontWeight: FontWeight.w800,fontSize: 25,fontFamily: 'Inter'),),
+        actions: [
           Padding(
-            padding: EdgeInsets.only(right: 15),
-            child: CircleAvatar(backgroundColor: Color(0xFF4A4A4A), radius: 15),
+            padding: const EdgeInsets.only(right: 15),
+            child: Container(
+              width: 35,
+              height: 35,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade900,
+                borderRadius: BorderRadius.circular(9),
+                image: const DecorationImage(
+                  image: AssetImage(""),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
           )
         ],
       ),
@@ -34,8 +45,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 10),
-            const Text("TASK TITLE", style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
+            const Text("TASK TITLE", style: TextStyle(fontSize: 10.4, color: Colors.black54, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 9),
             const Text("Architecture\nReview: Core API\nv2", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, height: 1.2)),
             const SizedBox(height: 30),
             Row(
@@ -108,19 +119,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             ),
             const SizedBox(height: 100),
           ],
-        ),
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(20),
-        child: Container(
-          height: 50,
-          decoration: BoxDecoration(
-            color: const Color(0xFF007BFF),
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: const Center(
-            child: Text("SAVE CHANGES",style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-          ),
         ),
       ),
     );

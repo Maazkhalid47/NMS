@@ -25,7 +25,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
         title: Row(
           children: [
             Icon(Icons.menu_rounded,color: Colors.black,),
-            Text('WorkSpace',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 25,fontFamily: 'Inter'),)
+            SizedBox(width: 19.5,),
+            Text('WorkSpace',style: TextStyle(color: Colors.black,fontWeight: FontWeight.w800,fontSize: 25,fontFamily: 'Inter'),)
           ],
         ),
         actions: [
@@ -53,23 +54,23 @@ class _TaskListScreenState extends State<TaskListScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             Row(
               children: [
-                const Icon(Icons.arrow_back_ios, size: 14, color: Colors.black54),
+                const Icon(Icons.arrow_back_ios, size: 14, color: Colors.black87),
                 const SizedBox(width: 5),
                 const Text(
                   "ALL PROJECTS",
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black54,
+                    color: Colors.black87,
                     letterSpacing: 1,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -107,7 +108,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                           return AnimatedContainer(duration: Duration(milliseconds: 400),height: 3.4,
                           width: constraints.maxWidth * completionPercentage,
                             decoration: BoxDecoration(
-                              color: Colors.blue.shade900.withOpacity(0.10),
+                              color: Colors.blueAccent.withOpacity(0.6),
                               borderRadius: BorderRadius.circular(10),
                             ),
                           );
@@ -156,7 +157,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   _taskListItem("HIGH", "O.S Infrastructure Audit & Security Scaling", "Oct 24", "3", Colors.red, false),
                   _taskListItem("MEDIUM", "Brand Guidelines V2 Distribution", "Oct 24", null, Colors.blue, false),
                   _taskListItem(null, "Review annual performance metrics", "Done", null, Colors.grey, true),
-                  _taskListItem("LOW", "Update team bio for website redesign", "Nov 02", null, Colors.blueGrey, false),
+                  _taskListItem("LOW", "Update team bio for website redesign", "Nov 02", null, Colors.green.shade900, false),
                 ],
               ),
             ),
@@ -168,22 +169,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
         backgroundColor: Colors.black,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: const Icon(Icons.add, color: Colors.white),
-      ),
-      bottomNavigationBar: Container(
-        height: 70,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Colors.black.withOpacity(0.05))),
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Icon(Icons.grid_view_rounded, color: Colors.black12),
-            Icon(Icons.list_alt_rounded, color: Colors.black12),
-            Icon(Icons.folder_open_rounded, color: Colors.black), // Active
-            Icon(Icons.person_outline, color: Colors.black12),
-          ],
-        ),
       ),
     );
   }

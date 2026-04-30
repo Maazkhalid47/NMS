@@ -1,5 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:software_management/view/side_drawer.dart';
+import 'package:software_management/view_model/dashboard_view_model.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -18,150 +22,131 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<DashboardViewModel>();
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FD),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xffF5F5F5),
         elevation: 0,
-        leading: const Icon(Icons.menu, color: Colors.black),
-        title: const Row(
-          children: [
-            Text("Studio X", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,),),
-            Icon(Icons.keyboard_arrow_down, color: Colors.black),
-          ],
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(25)),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(12),
-                image: DecorationImage(
-                  image: AssetImage(""),
-                  fit: BoxFit.cover,
+        leading: Builder(builder: (context) => IconButton(
+          icon: Icon(Icons.menu, color: Colors.black),
+          onPressed: Scaffold.of(context).openDrawer,)),
+        title: PopupMenuButton<String>(
+          onSelected: (String id) => viewModel.selectWorkspaces(id),
+          itemBuilder: (context) => viewModel.workspaces.map((ws) {
+            return PopupMenuItem<String>(value: ws.id, child: Text(ws.name));
+          }).toList(),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                viewModel.isLoading
+                    ? "Loading..."
+                    : viewModel.selectedWorkspaceName,
+                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 24, letterSpacing: 0.1,),
+              ),
+              SizedBox(width: 5),
+              const Icon(Icons.keyboard_arrow_down, color: Colors.black, size: 22,),
+              Spacer(),
+              Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-            )
+            ],
           ),
-        ],
+        ),
+        actions: [const SizedBox(width: 1)],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                _buildStatCard("PENDING", "12", const Color(0xFF007AFF), true),
-                const SizedBox(width: 15),
-                _buildStatCard("COMPLETED", "48", Colors.grey, false),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: Colors.black12)),
-              ),
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: Text("Add a task...", style: TextStyle(color: Colors.black26),),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF007AFF),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: const Icon(Icons.add, color: Colors.white, size: 20),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Today's Focus", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                Text("OCT 24, 2023", style: TextStyle(color: Colors.grey, fontSize: 12),),
-              ],
-            ),
-            const SizedBox(height: 20),
-            _buildTaskItem("Review brand identity guidelines", "HIGH PRIORITY", Colors.red,),
-            _buildTaskItem("Client presentation prep", "STUDIO X", Colors.blue),
-            _buildTaskItem("Invoice reconciliation", "ADMIN", Colors.grey),
-            _buildTaskItem("Update design system tokens", "SYSTEMS", Colors.blueAccent,),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.02),blurRadius: 10,),
-                ],
-              ),
+      body: viewModel.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 100,
-                    height: 4,
-                    color: const Color(0xFF007AFF).withOpacity(0.5),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      _buildStatCard("PENDING", viewModel.pendingCount.toString(), const Color(0xFF007AFF), true,),
+                      const SizedBox(width: 15),
+                      _buildStatCard("COMPLETED", viewModel.completedCount.toString(), Colors.grey, false,),
+                    ],
                   ),
-                  const SizedBox(height: 15),
-                  const Text("WEEKLY GOAL", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey,),),
-                  const SizedBox(height: 5),
-                  const Text("You're nearly there.", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-                  const SizedBox(height: 5),
-                  const Text("75% of your objectives for the 'Precision Atelier' sprint are finished.", style: TextStyle(color: Colors.grey, fontSize: 13),),
+                  const SizedBox(height: 20),
+                  const SizedBox(height: 20),
+                  const Text("Today's Focus", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: viewModel.tasks.isEmpty
+                        ? const Center(
+                            child: Text("No tasks found. Click + to add"),
+                          )
+                        : ListView.builder(
+                            itemCount: viewModel.tasks.length,
+                            itemBuilder: (context, index) {
+                              final task = viewModel.tasks[index];
+                              return Dismissible(key: Key(task.id),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: const Icon(Icons.delete_sweep,color: Colors.white,),
+                                  ),
+                                  onDismissed: (direction){
+                                    viewModel.deleteTask(task.id);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text("${task.title} deleted")),
+                                    );
+                                  },
+                                child: Card(
+                                  color: const Color(0xffF9F9FB),
+                                  shadowColor: Colors.grey,
+                                  elevation: 0.5,
+                                  margin: const EdgeInsets.symmetric(vertical: 6),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ListTile(
+                                    leading: Icon(Icons.circle, color: getPriorityColor(task.priority), size: 14,),
+                                    title: Text(task.title, style: const TextStyle(fontWeight: FontWeight.bold),),
+                                    subtitle: Text(task.description ?? "No description"),
+                                    trailing: Text(formatDate(task.dueDate), style: const TextStyle(fontSize: 10, color: Colors.black87),),
+                                  ),
+                                ),
+                              );
+                            },
+                    ),
+                  ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-          ],
-        ),
+      drawer: const SideDrawer(),
+
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
+        child: const Icon(Icons.add, color: Colors.white),
+        onPressed: () {
+          if (viewModel.selectedWorkspaceId != null) {
+            _showAddTaskDialog();
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Please select a workspace first!")),
+            );
+          }
+        },
       ),
-      bottomNavigationBar: Container(
-        height: 80,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Colors.black12, width: 0.5)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildNavItem(Icons.grid_view_rounded, "HOME", true),
-            _buildNavItem(Icons.list_alt_rounded, "LIST", false),
-            _buildNavItem(Icons.folder_open_rounded, "FILES", false),
-            _buildNavItem(Icons.person_outline_rounded, "PROFILE", false),
-          ],
-        ),
-      ),
-    );
-  }
-  Widget _buildNavItem(IconData icon, String label, bool isActive) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon,color: isActive ? Colors.black : Colors.black26, size: 24),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isActive ? Colors.black : Colors.black26, letterSpacing: 0.5,),
-        ),
-        if (isActive)
-          Container(
-            margin: const EdgeInsets.only(top: 4),
-            width: 15,
-            height: 2,
-            color: Colors.black,
-          ),
-      ],
     );
   }
   Widget _buildStatCard(
@@ -169,7 +154,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     String count,
     Color color,
     bool isActive,
-  ) {
+  ){
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(20),
@@ -180,15 +165,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              label,
-              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey,),
-            ),
+           Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey,),),
             const SizedBox(height: 5),
-            Text(
-              count,
-              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-            ),
+            Text(count, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),),
             const SizedBox(height: 10),
             Container(width: 60, height: 3, color: color),
           ],
@@ -214,22 +193,78 @@ class _DashboardScreenState extends State<DashboardScreen> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14,),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
                 ),
                 Text(
                   subtitle,
-                  style: const TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold,),
+                  style: const TextStyle(fontSize: 10, color: Colors.grey),
                 ),
               ],
             ),
           ),
           Container(
-            width: 6,
-            height: 6,
+            width: 8,
+            height: 8,
             decoration: BoxDecoration(color: tagColor, shape: BoxShape.circle),
           ),
         ],
       ),
     );
+  }
+  Widget _buildWeeklyGoalCard() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 100,
+            height: 4,
+            color: const Color(0xFF007AFF).withOpacity(0.5),
+          ),
+          const SizedBox(height: 15),
+          const Text(
+            "WEEKLY GOAL",
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+          const Text(
+            "You're nearly there.",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+}
+Color getPriorityColor(String? priority) {
+  if (priority == null) return Colors.blue;
+  switch (priority.trim().toLowerCase()) {
+    case 'high':
+      return Colors.red;
+    case 'medium':
+      return Colors.orange;
+    case 'low':
+      return Colors.green;
+    default:
+      return Colors.blue;
+  }
+}
+String formatDate(String dateString){
+  try{
+    DateTime dateTime = DateTime.parse(dateString);
+    return DateFormat('yMMMd').add_jm().format(dateTime);
+  }catch(e){
+    return dateString;
   }
 }
