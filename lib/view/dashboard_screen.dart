@@ -452,7 +452,7 @@ import 'components/custom_appbar.dart';
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.red,
                         ),
-                        child: const Icon(Icons.delete_outline_outlined,color: Colors.white,),
+                        child: const Icon(Icons.delete_outline_sharp,color: Colors.white,),
                       ),
                       onDismissed: (direction){
                     viewModel.deleteTask(task.id);
