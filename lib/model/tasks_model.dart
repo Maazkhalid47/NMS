@@ -18,7 +18,7 @@ class TaskModel {
     required this.created_at,
     required this.priority,});
 
-  factory TaskModel.fromMap(Map<String, dynamic> map) {
+  factory TaskModel.fromJson(Map<String, dynamic> map) {
     return TaskModel(
       id: map['id'] ?? '',
       title: map['title'] ?? '',

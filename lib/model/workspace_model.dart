@@ -6,7 +6,7 @@ class WorkspaceModel {
 
   WorkspaceModel({required this.id, required this.name, required this.userId,this.collaborator});
 
-  factory WorkspaceModel.fromMap(Map<String, dynamic> map) {
+  factory WorkspaceModel.fromJson(Map<String, dynamic> map) {
     return WorkspaceModel(
       id: map['id'],
       name: map['name'],

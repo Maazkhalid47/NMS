@@ -36,6 +36,18 @@ class DashboardViewModel extends ChangeNotifier {
       return 'No Workspace';
     }
   }
+  Stream<List<WorkspaceModel>> streamWorkspaces() {
+    return supabase.from('workspaces').stream(primaryKey: ['id']).map(
+          (data) => data.map((wsJson) => WorkspaceModel.fromJson(Map<String, dynamic>.from(wsJson))).toList(),
+    );
+  }
+  Stream<List<TaskModel>> streamTasks(String workspaceId) {
+    return supabase
+        .from('tasks')
+        .stream(primaryKey: ['id'])
+        .eq('workspace_id', workspaceId)
+        .map((data) => data.map((taskJson) => TaskModel.fromJson(taskJson)).toList());
+  }
   Future<void> getWorkspaces() async {
     if (isLoading) return;
 
@@ -105,6 +117,19 @@ class DashboardViewModel extends ChangeNotifier {
       debugPrint("DATABASE ERROR: $e");
     }
   }
+  Future<void> deleteWorkspace(String id) async{
+    try{
+      await supabase.from('workspaces').delete().eq('id', id);
+
+      await getWorkspaces();
+
+      if(workspaces.isEmpty){
+        clearData();
+      }
+    }catch(e){
+      debugPrint("Error deleting workspaces: $e");
+    }
+  }
   Future<void> createNewWorkspace(String name) async {
     final user = supabase.auth.currentUser;
     if (user == null) return;
@@ -135,6 +160,15 @@ class DashboardViewModel extends ChangeNotifier {
     return workspaces
         .firstWhere((ws) => ws.id == _selectedWorkspaceId)
         .collaborator;
+  }
+  Future<void> updateWorkspace(String id, String newName) async{
+    try{
+      await supabase.from('workspaces').update({'name': newName}).eq('id',id);
+
+      await getWorkspaces();
+    }catch(e){
+      debugPrint("Error Updating Workspace: $e");
+    }
   }
   Future<void> updateTaskStatus(String taskId, String status) async {
     try {

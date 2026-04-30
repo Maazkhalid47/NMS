@@ -175,8 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onTap: () {
                       if (emailController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: const Text(
-                                "Enter your email first, then request a reset link")));
+                            SnackBar(content: const Text("Enter your email first, then request a reset link")));
                       } else {
                         _handleForgotPassword(emailController.text.trim());
                       }
@@ -276,10 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: TextButton.icon(
                     onPressed: () {},
                     icon: const Icon(Icons.fingerprint, color: Colors.black54),
-                    label: const Text("Use Biometric Login", style: TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13.2),),),
+                    label: const Text("Use Biometric Login", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 13.2),),),
                 ),
                 const SizedBox(height: 60),
                 Center(
