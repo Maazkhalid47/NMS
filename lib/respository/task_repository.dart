@@ -9,7 +9,7 @@ class TaskRepository {
         .from('tasks')
         .select().eq('workspace_id', workspaceId).eq('created_by', _supabase.auth.currentUser!.id);
 
-    return (response as List).map((task) => TaskModel.fromMap(task)).toList();
+    return (response as List).map((task) => TaskModel.fromJson(task)).toList();
   }
 
   Future<void> addTask({

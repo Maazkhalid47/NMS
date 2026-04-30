@@ -4,6 +4,7 @@
   import 'package:font_awesome_flutter/font_awesome_flutter.dart';
   import 'package:intl/intl.dart';
   import 'package:provider/provider.dart';
+import 'package:software_management/model/workspace_model.dart';
   import 'package:software_management/view/task_details_screen.dart';
   import 'package:software_management/view_model/dashboard_view_model.dart';
 
@@ -72,7 +73,7 @@ import 'components/custom_appbar.dart';
                       decoration: InputDecoration(
                         hintText: "What needs to be done?",
                         filled: true,
-                        fillColor: Colors.white,
+                        fillColor: Colors.white38,
                         contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -334,9 +335,7 @@ import 'components/custom_appbar.dart';
                             Navigator.pop(context);
                           }
                         },
-                        child: const Text(
-                          "CREATE",
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        child: const Text("CREATE", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -347,6 +346,124 @@ import 'components/custom_appbar.dart';
           ),
         ),
       );
+    }
+    void _showEditWorkspaceDialog(WorkspaceModel ws){
+      final editController = TextEditingController();
+
+      showDialog(context: context,
+          builder: (context) => AlertDialog(
+        title: const Text("Edit Workspace",),
+        content: TextField(
+          controller: editController,
+          decoration: InputDecoration(
+            hintText: "What needs to be done?",
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.black12),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFF7B68EE), width: 2),
+            ),
+          ),
+        ),
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(11.5)
+                  )
+                ),
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Cancel"),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(11.5),
+                  )
+                ),
+                onPressed: () async {
+                  if (editController.text.isNotEmpty) {
+                    await context.read<DashboardViewModel>().updateWorkspace(ws.id, editController.text);
+                    setState(() {});
+                    if (mounted) Navigator.pop(context);
+                  }
+                },
+                child: const Text("Update",style: TextStyle(color: Colors.white),),
+              ),
+            ],
+      ), );
+    }
+    void _confirmDeleteWorkspace(WorkspaceModel ws){
+      final confirmController = TextEditingController();
+
+      showDialog(context: context, builder: (context) => AlertDialog(
+        title: const Text("Delete Workspace?", style: TextStyle(color: Colors.red),),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Are you sure (${ws.name}) you want to delete?\n All its tasks will also be deleted.",style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold),),
+            const SizedBox(height: 15,),
+            const Text("To confirm, please enter the workspace name.",style: TextStyle(fontSize: 13,fontWeight: FontWeight.bold)),
+            const SizedBox(height: 5,),
+            TextField(
+              controller: confirmController,
+              decoration: InputDecoration(
+                hintText: "What needs to be done?",
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Colors.black12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFF7B68EE), width: 2),
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(11.5)
+              )
+            ),
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel",style: TextStyle(color: Colors.black),),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(11.5)
+            )
+            ),
+            onPressed: () async {
+              if (confirmController.text.trim() == ws.name.trim()) {
+                await context.read<DashboardViewModel>().deleteWorkspace(ws.id);
+                setState(() {});
+                if (mounted) Navigator.pop(context);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Name does not match.")),
+                );
+              }
+            },
+            child: const Text("Yes, Delete", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ));
     }
     Color getPriorityColor(String? priority) {
       final p = priority?.trim().toLowerCase() ?? "";
@@ -366,24 +483,73 @@ import 'components/custom_appbar.dart';
             icon: const Icon(Icons.add_outlined, color: Colors.black),
             onPressed: () => _showCreateWorkspaceSheet(context),
           ),
-          title: PopupMenuButton<String>(
-            offset: const Offset(0, 35),
-            onSelected: (String id) => viewModel.selectWorkspaces(id),
-            itemBuilder: (context) => viewModel.workspaces.map(
-                  (ws) => PopupMenuItem<String>(value: ws.id, child: Text(ws.name)),
-            ).toList(),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: Text(
-                    viewModel.isLoading ? "Loading..." : viewModel.selectedWorkspaceName,
-                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: PopupMenuButton<String>(
+                  key: _menuKey,
+                  offset: const Offset(0, 45),
+                  onSelected: (String value) {
+                    viewModel.selectWorkspaces(value);
+                  },
+                  itemBuilder: (context) {
+                    return viewModel.workspaces
+                        .map((ws) => PopupMenuItem<String>(value: ws.id, child: Text(ws.name)))
+                        .toList();
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          viewModel.isLoading ? "Loading..." : viewModel.selectedWorkspaceName,
+                          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      ),
+                      const Icon(Icons.keyboard_arrow_down, color: Colors.black),
+                    ],
                   ),
                 ),
-                const Icon(Icons.keyboard_arrow_down, color: Colors.black),
-              ],
-            ),
+              ),
+              if (viewModel.workspaces.isNotEmpty)
+                PopupMenuButton<String>(
+                  icon: const Icon(Icons.more_vert, color: Colors.black),
+                  onSelected: (String value) {
+                    final selectedWorkspace = viewModel.workspaces.firstWhere(
+                          (ws) => ws.id == viewModel.selectedWorkspaceId,
+                    );
+
+                    if (value == 'edit') {
+                      _showEditWorkspaceDialog(selectedWorkspace);
+                    } else if (value == 'delete') {
+                      _confirmDeleteWorkspace(selectedWorkspace);
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem<String>(
+                      value: 'edit',
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit, size: 18, color: Colors.blue),
+                          SizedBox(width: 8),
+                          Text('Edit Workspace'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'delete',
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete, size: 18, color: Colors.red),
+                          SizedBox(width: 8),
+                          Text('Delete', style: TextStyle(color: Colors.red)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+            ],
           ),
         ),
         body: viewModel.isLoading ? const Center(child: CircularProgressIndicator()) : viewModel.workspaces.isEmpty ? _buildEmptyState(context) : _buildDashboardContent(viewModel),

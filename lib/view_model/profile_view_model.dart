@@ -42,13 +42,11 @@ class ProfileViewModel extends ChangeNotifier{
   }
   Future<void> logout(BuildContext context) async {
     try {
-      await _supabase.auth.signOut(); // Supabase se logout
+      await _supabase.auth.signOut();
 
       if (context.mounted) {
-        // Dashboard ka purana data clear karein taake next login par purana kuch na dikhe
         Provider.of<DashboardViewModel>(context, listen: false).clearData();
       }
-      // Yahan se Navigator wali line hata dein (kyunki hum screen par handle kar rahe hain)
     } catch (e) {
       debugPrint("Logout Error: $e");
     }

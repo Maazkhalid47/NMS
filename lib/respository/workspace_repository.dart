@@ -10,7 +10,7 @@ class WorkspaceRepository {
 
     final response = await _supabase.from('workspaces').select().eq('user_id', user.id);
 
-    return (response as List).map((e) => WorkspaceModel.fromMap(e)).toList();
+    return (response as List).map((e) => WorkspaceModel.fromJson(e)).toList();
   }
   Future<void> createWorkspaces(String name) async {
     final user = _supabase.auth.currentUser;
