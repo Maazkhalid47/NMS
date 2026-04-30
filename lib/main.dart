@@ -13,7 +13,7 @@ import 'package:software_management/view_model/dashboard_view_model.dart';
 import 'package:software_management/view_model/navigation_view_model.dart';
 import 'package:software_management/view_model/profile_view_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
+import 'package:software_management/core/routes.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Inter',
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-    );
+    ),
+     );
   }
 }
