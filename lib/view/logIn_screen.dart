@@ -16,6 +16,9 @@ class LoginScreen extends StatefulWidget {
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
+
+
+  static const String routeName = "/login";
 }
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
@@ -287,8 +290,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.grey, fontWeight: FontWeight.bold),),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (
-                              context) => SignupScreen()));
+                          // Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen()));
+                        context.go(SignupScreen.routeName);
+                        
                         },
                         child: const Text("Sign Up", style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold),),

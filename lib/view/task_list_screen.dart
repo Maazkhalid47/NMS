@@ -13,6 +13,9 @@ class TaskListScreen extends StatefulWidget {
 
   @override
   State<TaskListScreen> createState() => _TaskListScreenState();
+
+
+  static const String routeName = "/task_list";
 }
 
 class _TaskListScreenState extends State<TaskListScreen> {

@@ -14,6 +14,9 @@ import 'components/custom_appbar.dart';
 
     @override
     State<DashboardScreen> createState() => _DashboardScreenState();
+
+
+  static const String routeName = "/dashboard";
   }
 
   final GlobalKey<PopupMenuButtonState<String>> _menuKey = GlobalKey();

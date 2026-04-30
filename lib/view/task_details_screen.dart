@@ -14,6 +14,9 @@ class TaskDetailsScreen extends StatefulWidget {
 
   @override
   State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
+
+
+  static const String routeName = "/task_details"; 
 }
 
 class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
