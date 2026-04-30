@@ -47,8 +47,7 @@ import 'components/custom_appbar.dart';
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text("Add New Task",
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                        const Text("Add New Task",style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                         GestureDetector(
                           onTap: () => Navigator.pop(context),
                           child: Container(
